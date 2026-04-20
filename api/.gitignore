@@ -1,0 +1,67 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+out/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]enchmark[Dd]ot[Nn]et.Artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+!**/packages/build/
+
+# Rider / ReSharper
+.idea/
+*.sln.iml
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# VS Code
+.vscode/
+
+# Visual Studio cache/options
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# EF Core migrations bundle output
+efbundle
+
+# Local tools and secrets
+.secrets/
+
+# Dotnet local settings and generated files
+*.cache
+*.pidb
+*.svclog
+
+# Publish artifacts
+publish/
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Docker overrides (optional local)
+docker-compose.override.yml
