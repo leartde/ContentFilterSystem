@@ -9,6 +9,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+  ?? ["http://localhost:5173", "http://localhost:4173"];
+
 builder.Services.AddCors(options =>
 {
   options.AddDefaultPolicy(policy =>
@@ -16,7 +19,7 @@ builder.Services.AddCors(options =>
     policy.AllowAnyMethod()
       .AllowAnyHeader()
       .AllowCredentials()
-      .WithOrigins("http://localhost:5173");
+      .WithOrigins(allowedOrigins);
   });
 });
 
@@ -33,8 +36,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors();
 app.UseAuthorization();
 
+using (var scope = app.Services.CreateScope())
+{
+  var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+  db.Database.Migrate();
+}
+
 app.MapControllers();
-app.UseCors();
 app.Run();
