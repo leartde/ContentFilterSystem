@@ -22,13 +22,13 @@ public class TextController : ControllerBase
   public IActionResult ProcessText(string input)
   {
     var words = SeparateWords(input);
-    Dictionary<string, ViewRuleDto?> matches = new Dictionary<string, ViewRuleDto?>();
+    List<ProcessedTextDto> matches = [];
     foreach (var word in words)
     {
-      var matchingRule = CheckMatchingRules(word);
-      if (matchingRule is not null)
+      var match = CheckMatchingRules(word);
+      if (match is not null)
       {
-        matches[word] = matchingRule;
+        matches.Add(match);
       }
     }
 
@@ -45,7 +45,7 @@ public class TextController : ControllerBase
       .ToList();
   }
 
-  private ViewRuleDto? CheckMatchingRules(string word)
+  private ProcessedTextDto? CheckMatchingRules(string word)
   {
     Rule? specificRule = null;
     var rules = _context.Rules.Where(r => r.IsEnabled).ToList();
@@ -72,20 +72,6 @@ public class TextController : ControllerBase
       }
     }
 
-    if (specificRule != null)
-    {
-      return new ViewRuleDto
-      (
-        specificRule.Id,
-        specificRule.Keyword,
-        specificRule.MatchType.ToString(),
-        specificRule.ActionType.ToString(),
-        specificRule.HighlightColor.ToString() ?? "",
-        specificRule.TagText ?? "",
-        specificRule.IsEnabled
-      );
-    }
-
-    return null;
+    return specificRule != null ? new ProcessedTextDto(word, specificRule.HighlightColor.ToString(), specificRule.TagText) : null;
   }
 }
