@@ -1,119 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
+import FetchRules from "./services/FetchRules.ts";
+import { useEffect, useState } from "react";
+import ViewRules from "./components/ViewRules.tsx";
+import { FaPlus } from "react-icons/fa6";
+import TextProcessor from "./components/TextProcessor.tsx";
+import type { ViewRule } from "./types/ViewRule.ts";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [rules, setRules] = useState<ViewRule[]>([])
+  useEffect(() => {
+    const getRules = async () => {
+      try{
+        const res = await FetchRules();
+        setRules(res);
+      }
+      catch (error) {
+        console.error("Failed to fetch rules:", error);
+      }}
+    getRules();
+  }, [])
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+      <section className="grid grid-cols-1 md:grid-cols-2 bg-gray-200/60" id="main">
+        <div className="border-2 border-gray-300 p-8 flex flex-col gap-4">
+          <h2 className="text-xl font-semibold text-gray-900/80">Rule Management</h2>
+          <ViewRules rules={rules}/>
+          <button className="w-40 flex items-center justify-center gap-1 px-4 py-2 border cursor-pointer font-semibold shadow-sm border-gray-500 rounded-md bg-gray-300/20 text-gray-800 text-md hover:text-white hover:bg-gray-800" type="button">
+            <FaPlus className='text-gray-500' /> Add New Rule
+          </button>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+
+
+        <div className="border-2 border-gray-300 p-8 flex flex-col gap-4">
+          <h2 className="text-xl font-semibold text-gray-900/80">Text Processing</h2>
+          <TextProcessor />
+
         </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+
       </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
     </>
   )
 }
