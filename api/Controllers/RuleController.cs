@@ -48,7 +48,7 @@ public class RuleController : ControllerBase
     {
       await _context.Rules.AddAsync(rule);
       await _context.SaveChangesAsync();
-      return CreatedAtRoute("GetRules", new { id = rule.Id }, rule);
+      return Ok(new ViewRuleDto(rule.Id, rule.Keyword, rule.MatchType.ToString(), rule.ActionType.ToString(), rule.HighlightColor.ToString() ?? "", rule.TagText ?? "", rule.IsEnabled));
     }
     catch (DbUpdateException e)
     {
@@ -59,9 +59,9 @@ public class RuleController : ControllerBase
   [HttpGet, Route("{id:int}", Name = "GetRuleById")]
   public async Task<IActionResult> GetRuleById(int id)
   {
-    var rules = await _context.Rules.FindAsync(id);
-    if (rules is null) return NotFound();
-    return Ok(rules);
+    var rule = await _context.Rules.FindAsync(id);
+    if (rule is null) return NotFound();
+    return Ok(new ViewRuleDto(rule.Id, rule.Keyword, rule.MatchType.ToString(), rule.ActionType.ToString(), rule.HighlightColor.ToString() ?? "", rule.TagText ?? "", rule.IsEnabled));
   }
 
   [HttpPut, Route("{id:int}", Name = "UpdateRule")]
@@ -76,7 +76,7 @@ public class RuleController : ControllerBase
     rule.TagText = updatedRule.TagText;
     rule.IsEnabled = updatedRule.IsEnabled;
     await _context.SaveChangesAsync();
-    return Ok(rule);
+    return Ok(new ViewRuleDto(rule.Id, rule.Keyword, rule.MatchType.ToString(), rule.ActionType.ToString(), rule.HighlightColor.ToString() ?? "", rule.TagText ?? "", rule.IsEnabled));
   }
 
   [HttpDelete, Route("{id:int}", Name = "DeleteRule")]
@@ -85,6 +85,26 @@ public class RuleController : ControllerBase
     var rule = await _context.Rules.FindAsync(id);
     if (rule is null) return NotFound();
     _context.Rules.Remove(rule);
+    await _context.SaveChangesAsync();
+    return NoContent();
+  }
+
+  [HttpPatch, Route("{id:int}/disable", Name = "DisableRlule")]
+  public async Task<IActionResult> DisableRule(int id)
+  {
+    var rule = await _context.Rules.FindAsync(id);
+    if (rule is null) return NotFound();
+    rule.IsEnabled = false;
+    await _context.SaveChangesAsync();
+    return NoContent();
+  }
+
+  [HttpPatch, Route("{id:int}/enable", Name = "EnableRule")]
+  public async Task<IActionResult> EnableRule(int id)
+  {
+    var rule = await _context.Rules.FindAsync(id);
+    if (rule is null) return NotFound();
+    rule.IsEnabled = true;
     await _context.SaveChangesAsync();
     return NoContent();
   }

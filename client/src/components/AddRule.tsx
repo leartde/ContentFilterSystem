@@ -2,6 +2,7 @@ import { type ChangeEvent, useState } from "react";
 import type { AddRuleForm } from "../types/AddRule.ts";
 import { COLOR_STYLES } from "../utils/colors.ts";
 import CreateRule from "../services/CreateRule.ts";
+import type { ViewRule } from "../types/ViewRule.ts";
 
 type ColorName = keyof typeof COLOR_STYLES;
 const COLOR_MAP: Record<1 | 2 | 3 | 4 | 5, ColorName> = {
@@ -12,13 +13,13 @@ const COLOR_MAP: Record<1 | 2 | 3 | 4 | 5, ColorName> = {
   5: "Red",
 };
 
-const AddRule = () => {
+const AddRule = ({setRules}: {setRules: React.Dispatch<React.SetStateAction<ViewRule[]>>}) => {
   const [form, setForm] = useState<AddRuleForm>({
     keyword: "",
     matchType: 1,
     actionType: 1,
     highlightColor: 1,
-    tagText: ""
+    tagText: null,
   });
   const [isColorOpen, setIsColorOpen] = useState(false);
   const colorName = COLOR_MAP[form.highlightColor as 1|2|3|4|5];
@@ -26,6 +27,15 @@ const AddRule = () => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
+    if (id === "actionType") {
+      const parsed = Number(value) as 1 | 2;
+      setForm(prev => parsed === 1
+        ? { ...prev, actionType: 1, highlightColor: 1, tagText: null }
+        : { ...prev, actionType: 2, highlightColor: null, tagText: "" }
+      );
+      return;
+    }
+
     const numericFields = ["matchType", "actionType"] as const;
     const parsedValue = numericFields.includes(id as (typeof numericFields)[number])
       ? Number(value)
@@ -34,9 +44,14 @@ const AddRule = () => {
     setForm(prev => ({ ...prev, [id]: parsedValue } as AddRuleForm));
   };
 
-  const handleSubmit = async() => {
-    const response = await CreateRule(form);
-    console.log("Rule created:", response);
+  const handleSubmit = async(e: React.SubmitEvent) => {
+    e.preventDefault();
+    try {
+      const createdRule = await CreateRule(form);
+      setRules(prev => [...prev, createdRule]);
+    } catch {
+      console.error("Failed to create rule");
+    }
   }
 
 
@@ -59,7 +74,6 @@ const AddRule = () => {
               setForm(prev => ({ ...prev, keyword: pasted }));
             }}
             onChange={handleInputChange}
-            placeholder="e.g. urgent"
           />
         </div>
 
@@ -110,7 +124,12 @@ const AddRule = () => {
                       key={num}
                       className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
                       onClick={() => {
-                        setForm(prev => ({ ...prev, highlightColor: Number(num) as 1|2|3|4|5 }));
+                        setForm(prev => ({
+                          ...prev,
+                          actionType: 1,
+                          highlightColor: Number(num) as 1|2|3|4|5,
+                          tagText: null,
+                        }));
                         setIsColorOpen(false);
                       }}
                     >
@@ -131,9 +150,8 @@ const AddRule = () => {
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
               type="text"
               id="tagText"
-              value={form.tagText}
+              value={form.tagText || ""}
               onChange={handleInputChange}
-              placeholder="e.g. IMPORTANT"
             />
           </div>
         )}

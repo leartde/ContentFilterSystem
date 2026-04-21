@@ -1,6 +1,7 @@
 import type { ViewRule } from "../types/ViewRule.ts";
 import { COLOR_STYLES } from "../utils/colors.ts";
 
+
 type RuleColor = keyof typeof COLOR_STYLES;
 
 const ColorLabel = ({ color }: { color: RuleColor}) => {
@@ -19,7 +20,11 @@ const TagLabel = ({ text }: { text: string}) => {
   </span>);
 }
 
-const ViewRules = ({rules} : {rules: ViewRule[]}) => {
+
+
+const ViewRules = ({rules, handleEnable, handleDisable, handleDelete} : {rules: ViewRule[], handleEnable: (id: number) => Promise<void>,
+  handleDisable: (id: number) => Promise<void>, handleDelete:  (id: number) => Promise<void>}) => {
+
 
   return (
     <div className="w-full max-h-96 overflow-x-auto overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">
@@ -49,7 +54,7 @@ const ViewRules = ({rules} : {rules: ViewRule[]}) => {
                   )}
                 </div>
               </td>
-              <td className="px-4 py-3">
+              <td className="px-2 py-3 ">
                 {rule.isEnabled ? (
                   <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
                     Enabled
@@ -60,9 +65,11 @@ const ViewRules = ({rules} : {rules: ViewRule[]}) => {
                   </span>
                 )}
               </td>
-              <td className="px-4 py-3 space-x-1">
-                <a className="text-blue-400 font-semibold" href="">Edit</a>
-                <a className="text-red-500 font-semibold" href="">Delete</a>
+              <td className="px-4 py-2 flex gap-2 items-center mt-1">
+                {rule.isEnabled ? (
+                  <button onClick={()=>handleDisable(rule.id)} className="m-0 cursor-pointer text-gray-500 font-semibold">Disable</button>
+                ): (<button onClick={()=>handleEnable(rule.id)} className="m-0 cursor-pointer text-green-500 font-semibold">Enable</button>)}
+                <button onClick={()=>handleDelete(rule.id)} className="m-0 rounded-md p-0.5 cursor-pointer inline text-white bg-red-500 hover:bg-red-600 font-semibold">Delete</button>
               </td>
             </tr>
           ))}
