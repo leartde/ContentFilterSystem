@@ -4,6 +4,6 @@ export type ViewRule = {
   matchType: "Contains" | "StartsWith" | "Exact"
   actionType: "Highlight" | "Tag"
   highlightColor: "Blue" | "Green" | "Yellow" | "Orange" | "Red" ;
-  tagText: string | null;
+  tagText: string;
   isEnabled: boolean;
 }

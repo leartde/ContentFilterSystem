@@ -3,10 +3,7 @@ import { COLOR_STYLES } from "../utils/colors.ts";
 
 type RuleColor = keyof typeof COLOR_STYLES;
 
-const ColorLabel = ({ color }: { color: RuleColor | null}) => {
-  if (!color) {
-    return;
-  }
+const ColorLabel = ({ color }: { color: RuleColor}) => {
   return (
     <span
       className="inline-block h-6 w-10 rounded border border-black/10"
@@ -16,11 +13,8 @@ const ColorLabel = ({ color }: { color: RuleColor | null}) => {
   );
 };
 
-const TagLabel = ({ text }: { text: string | null }) => {
-  if (!text){
-    return;
-  }
-  return (<span className="flex justify-center items-center rounded font-bold bg-yellow-200/80 px-2 py-1 text-xs text-gray-700">
+const TagLabel = ({ text }: { text: string}) => {
+  return (<span className="inline-flex max-w-52 justify-center rounded font-bold bg-yellow-200/80 px-2 py-1 text-center text-xs text-gray-700 wrap-break-word">
     {text}
   </span>);
 }
@@ -28,7 +22,7 @@ const TagLabel = ({ text }: { text: string | null }) => {
 const ViewRules = ({rules} : {rules: ViewRule[]}) => {
 
   return (
-    <div className="w-full overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="w-full max-h-96 overflow-x-auto overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">
       <table className="min-w-full text-left text-sm text-gray-700">
         <thead className="bg-gray-100 text-xs font-semibold uppercase tracking-wide text-gray-600">
           <tr>
@@ -47,11 +41,13 @@ const ViewRules = ({rules} : {rules: ViewRule[]}) => {
               <td className="px-4 py-3">{rule.matchType}</td>
               <td className="px-4 py-3">{rule.actionType}</td>
               <td className="px-4 py-3">
-                {rule.actionType === "Highlight" ? (
-                  <ColorLabel color={rule.highlightColor} />
-                ) : (
-                  <TagLabel text={rule.tagText} />
-                )}
+                <div className="flex justify-center">
+                  {rule.actionType === "Highlight" ? (
+                    <ColorLabel color={rule.highlightColor} />
+                  ) : (
+                    <TagLabel text={rule.tagText} />
+                  )}
+                </div>
               </td>
               <td className="px-4 py-3">
                 {rule.isEnabled ? (

@@ -57,7 +57,7 @@ const TextProcessor = () => {
       </form>
 
       <h2 className="mt-2 text-md font-semibold text-gray-900/80">Processed Output:</h2>
-      <div className="p-4 border rounded-md bg-gray-100">
+      <div className="max-h-64 overflow-y-auto p-4 border rounded-md bg-gray-100">
         <p className="leading-8 wrap-break-word">
           {tokens.map((token, index) => {
             if (/^\s+$/.test(token)) {

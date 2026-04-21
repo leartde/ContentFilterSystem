@@ -5,6 +5,7 @@ import ViewRules from "./components/ViewRules.tsx";
 import { FaPlus } from "react-icons/fa6";
 import TextProcessor from "./components/TextProcessor.tsx";
 import type { ViewRule } from "./types/ViewRule.ts";
+import AddRule from "./components/AddRule.tsx";
 
 function App() {
   const [rules, setRules] = useState<ViewRule[]>([])
@@ -28,6 +29,8 @@ function App() {
           <button className="w-40 flex items-center justify-center gap-1 px-4 py-2 border cursor-pointer font-semibold shadow-sm border-gray-500 rounded-md bg-gray-300/20 text-gray-800 text-md hover:text-white hover:bg-gray-800" type="button">
             <FaPlus className='text-gray-500' /> Add New Rule
           </button>
+
+          <AddRule />
         </div>
 
 
