@@ -151,6 +151,7 @@ const AddRule = ({setRules}: {setRules: React.Dispatch<React.SetStateAction<View
               type="text"
               id="tagText"
               value={form.tagText || ""}
+              maxLength={50}
               onChange={handleInputChange}
             />
           </div>
