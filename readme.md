@@ -46,3 +46,13 @@
     ```npm run dev```
 4. Open the app: http://localhost:4173.
 
+
+
+
+#### Project side notes
+- If multiple rules match the same input, priority is based on specificity: `exact` > `startsWith` >
+  `contains`.
+- Tagged words display their tag in two places:
+  - as a tooltip on hover (via the `title` attribute)
+  - as a visible label next to the word
+- The backend prevents duplicate rules with the same `keyword` and `matchType`.
