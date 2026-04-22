@@ -9,8 +9,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-  ?? ["http://localhost:5173", "http://localhost:4173"];
+string[] allowedOrigins =  ["http://localhost:5173", "http://localhost:4173"];
 
 builder.Services.AddCors(options =>
 {
