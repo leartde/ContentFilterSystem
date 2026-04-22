@@ -51,7 +51,7 @@ public class TextController : ControllerBase
     var rules = _context.Rules.Where(r => r.IsEnabled).ToList();
     foreach (var rule in rules)
     {
-      if (rule.IsEnabled && word.Contains(rule.Keyword))
+      if (word.Contains(rule.Keyword))
       {
         if (word.Equals(rule.Keyword) && rule.MatchType == MatchType.Exact)
         {
